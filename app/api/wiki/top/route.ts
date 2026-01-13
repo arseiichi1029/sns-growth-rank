@@ -1,56 +1,57 @@
 import { NextResponse } from "next/server";
 
-type TopItem = {
-  title: string;
-  views: number;
-  rank: number;
-  url: string;
-};
+export async function GET(req: Request) {
+  try {
+    const url = new URL(req.url);
+    const lang = (url.searchParams.get("lang") || "ja").toLowerCase(); // ja/en など
+    const project = `${lang}.wikipedia`;
+    const access = "all-access";
 
-export async function GET() {
-  // Wikipedia Pageviews Top API (日本語)
-  // UTC日付で「前日分」が確実に出るので、昨日の日付を使う
-  const now = new Date();
-  const y = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const yyyy = y.getUTCFullYear();
-  const mm = String(y.getUTCMonth() + 1).padStart(2, "0");
-  const dd = String(y.getUTCDate()).padStart(2, "0");
+    // Wikimediaは日次データなので「昨日」を使う
+    const d = new Date();
+    d.setUTCDate(d.getUTCDate() - 1);
+    const year = d.getUTCFullYear();
+    const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(d.getUTCDate()).padStart(2, "0");
 
-  const endpoint = `https://wikimedia.org/api/rest_v1/metrics/pageviews/top/ja.wikipedia/all-access/${yyyy}/${mm}/${dd}`;
+    const api = `https://wikimedia.org/api/rest_v1/metrics/pageviews/top/${project}/${access}/${year}/${month}/${day}`;
 
-  const res = await fetch(endpoint, {
-    headers: { "User-Agent": "sns-growth-rank (learning project)" },
-    // キャッシュして負荷を減らす（同日中は同じ結果でOK）
-    next: { revalidate: 60 * 60 }, // 1時間
-  });
+    const r = await fetch(api, {
+      headers: { "User-Agent": "sns-growth-rank (demo)" },
+      // Vercelでキャッシュ効かせたいなら next: { revalidate: 3600 } とかも可
+    });
 
-  if (!res.ok) {
+    if (!r.ok) {
+      return NextResponse.json(
+        { ok: false, status: r.status, message: "Wikimedia API error" },
+        { status: 500 }
+      );
+    }
+
+    const json = await r.json();
+
+    // 形を使いやすく整える（上位50件）
+    const items =
+      json?.items?.[0]?.articles
+        ?.filter((a: any) => a.article && a.article !== "Main_Page")
+        ?.slice(0, 50)
+        ?.map((a: any) => ({
+          title: a.article,
+          views: a.views,
+          rank: a.rank,
+          url: `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(a.article)}`,
+        })) || [];
+
+    return NextResponse.json({
+      ok: true,
+      date: `${year}-${month}-${day}`,
+      lang,
+      items,
+    });
+  } catch (e: any) {
     return NextResponse.json(
-      { error: "failed to fetch top pageviews", status: res.status },
+      { ok: false, message: e?.message || "Unknown error" },
       { status: 500 }
     );
   }
-
-  const data = await res.json();
-
-  const articles = data?.items?.[0]?.articles ?? [];
-  const cleaned: TopItem[] = articles
-    // “Main_Page”や特殊ページを避けたいならフィルタ
-    .filter((a: any) => a?.article && a.article !== "Main_Page" && !String(a.article).startsWith("Special:"))
-    .slice(0, 10)
-    .map((a: any, idx: number) => {
-      const title = String(a.article).replaceAll("_", " ");
-      const url = `https://ja.wikipedia.org/wiki/${encodeURIComponent(String(a.article))}`;
-      return {
-        title,
-        views: Number(a.views ?? 0),
-        rank: idx + 1,
-        url,
-      };
-    });
-
-  return NextResponse.json({
-    date_utc: `${yyyy}-${mm}-${dd}`,
-    items: cleaned,
-  });
 }
