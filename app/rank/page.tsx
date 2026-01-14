@@ -40,6 +40,14 @@ export default function RankPage() {
 
   return (
     <div style={styles.bg}>
+      {/* PC用：左右の広告レール */}
+      <div className="ad-rail ad-rail-left" aria-hidden>
+        <div style={styles.adBox}>AD (Left)</div>
+      </div>
+      <div className="ad-rail ad-rail-right" aria-hidden>
+        <div style={styles.adBox}>AD (Right)</div>
+      </div>
+
       <div style={styles.wrap}>
         <header style={styles.header}>
           <div style={styles.brandRow}>
@@ -53,7 +61,12 @@ export default function RankPage() {
 
           <div style={styles.titleRow}>
             <div style={styles.title}>Wikipedia 今日の急上昇（日本）</div>
-            <a href="/api/wiki/top" target="_blank" rel="noreferrer" style={styles.apiLink}>
+            <a
+              href="/api/wiki/top"
+              target="_blank"
+              rel="noreferrer"
+              style={styles.apiLink}
+            >
               /api/wiki/top
             </a>
           </div>
@@ -65,9 +78,7 @@ export default function RankPage() {
               placeholder="検索（例：俳優 / アニメ / 地名）"
               style={styles.input}
             />
-            <div style={styles.count}>
-              {err ? "取得失敗" : `${filtered.length}件`}
-            </div>
+            <div style={styles.count}>{err ? "取得失敗" : `${filtered.length}件`}</div>
           </div>
 
           {err ? (
@@ -111,10 +122,13 @@ export default function RankPage() {
         </main>
 
         <footer style={styles.footer}>
-          <div style={styles.footerText}>
-            MVP / 見た目はあとで盛れる（今は「動く」が正義）
-          </div>
+          <div style={styles.footerText}>MVP / 広告はレイアウト先に固める</div>
         </footer>
+      </div>
+
+      {/* スマホ用：下固定広告バー */}
+      <div className="ad-bottom" aria-hidden>
+        <div style={styles.bottomAdInner}>AD (Bottom)</div>
       </div>
     </div>
   );
@@ -124,6 +138,7 @@ const styles: Record<string, React.CSSProperties> = {
   bg: {
     minHeight: "100vh",
     padding: 24,
+    paddingBottom: 90, // 下固定広告のぶん
     background:
       "radial-gradient(900px 500px at 15% 10%, rgba(255,60,60,0.18), transparent 60%)," +
       "radial-gradient(900px 700px at 85% 20%, rgba(120,200,255,0.14), transparent 60%)," +
@@ -131,7 +146,10 @@ const styles: Record<string, React.CSSProperties> = {
       "linear-gradient(180deg, #0a0a0a, #0b0b0b)",
     color: "white",
   },
+
+  // コンテンツ本体
   wrap: { maxWidth: 980, margin: "0 auto" },
+
   header: {
     padding: "14px 14px 10px",
     borderRadius: 18,
@@ -170,12 +188,7 @@ const styles: Record<string, React.CSSProperties> = {
     textDecoration: "none",
     borderBottom: "1px dashed rgba(255,255,255,0.25)",
   },
-  controls: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    marginTop: 10,
-  },
+  controls: { display: "flex", alignItems: "center", gap: 10, marginTop: 10 },
   input: {
     flex: 1,
     borderRadius: 12,
@@ -185,12 +198,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: "white",
     outline: "none",
   },
-  count: {
-    minWidth: 70,
-    textAlign: "right",
-    opacity: 0.8,
-    fontSize: 12,
-  },
+  count: { minWidth: 70, textAlign: "right", opacity: 0.8, fontSize: 12 },
   errBox: {
     marginTop: 10,
     padding: "10px 12px",
@@ -209,6 +217,7 @@ const styles: Record<string, React.CSSProperties> = {
     background: "rgba(255,80,80,0.25)",
     border: "1px solid rgba(255,80,80,0.35)",
   },
+
   card: {
     marginTop: 14,
     borderRadius: 18,
@@ -226,6 +235,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   smallLabel: { fontSize: 12, opacity: 0.7 },
   smallLabelRight: { fontSize: 12, opacity: 0.7, marginLeft: "auto" },
+
   list: { display: "flex", flexDirection: "column" },
   row: {
     display: "flex",
@@ -236,7 +246,13 @@ const styles: Record<string, React.CSSProperties> = {
     color: "white",
     borderBottom: "1px solid rgba(255,255,255,0.06)",
   },
-  left: { display: "flex", alignItems: "center", gap: 12, minWidth: 0, flex: 1 },
+  left: {
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    minWidth: 0,
+    flex: 1,
+  },
   rankBadge: {
     width: 34,
     height: 34,
@@ -250,10 +266,86 @@ const styles: Record<string, React.CSSProperties> = {
     flex: "0 0 auto",
   },
   titleCol: { minWidth: 0 },
-  itemTitle: { fontSize: 14, fontWeight: 700, opacity: 0.95, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
-  itemUrl: { fontSize: 11, opacity: 0.6, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
+  itemTitle: {
+    fontSize: 14,
+    fontWeight: 700,
+    opacity: 0.95,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+  itemUrl: {
+    fontSize: 11,
+    opacity: 0.6,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
   views: { fontVariantNumeric: "tabular-nums", opacity: 0.9, fontWeight: 800 },
   empty: { padding: 18, opacity: 0.7, fontSize: 13 },
+
   footer: { padding: 14, opacity: 0.6, fontSize: 12 },
   footerText: { textAlign: "center" },
+
+  // ===== 広告（ダミー） =====
+  // PC左右レール（スマホでは見せない）
+  adRailLeft: {
+    position: "fixed",
+    left: 12,
+    top: 80,
+    width: 220,
+    height: "calc(100vh - 120px)",
+    display: "none", // JSなしで出し分けしたいので、基本はCSSで出す（次の手順でglobals.cssに入れる）
+    pointerEvents: "none",
+  },
+  adRailRight: {
+    position: "fixed",
+    right: 12,
+    top: 80,
+    width: 220,
+    height: "calc(100vh - 120px)",
+    display: "none",
+    pointerEvents: "none",
+  },
+  adBox: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 16,
+    border: "1px solid rgba(255,255,255,0.10)",
+    background: "rgba(0,0,0,0.25)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0.55,
+    fontWeight: 800,
+    letterSpacing: 0.5,
+  },
+
+  // スマホ下固定（PCでは消す）
+  bottomAd: {
+    position: "fixed",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 70,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    background: "rgba(0,0,0,0.45)",
+    borderTop: "1px solid rgba(255,255,255,0.10)",
+    backdropFilter: "blur(10px)",
+  },
+  bottomAdInner: {
+    width: "min(680px, 96vw)",
+    height: 50,
+    borderRadius: 14,
+    border: "1px solid rgba(255,255,255,0.10)",
+    background: "rgba(255,255,255,0.06)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0.6,
+    fontWeight: 800,
+  },
 };
