@@ -342,8 +342,102 @@ load('wiki');
   document.getElementById("btn-hn")?.addEventListener("click", loadHN);
 })();
 </script>
+<script id="__extra_sources_patch_v1">
+(() => {
+  const root = document.documentElement;
+
+  // 既存UIの「表示元ラベル」「updated」を拾う（idが無くても拾う）
+  const pick = (sels) => sels.map(s => document.querySelector(s)).find(Boolean);
+  const srcLabelEl = pick(['#src-label','[data-role="source"]','.src-badge','.source-badge','.pill-source']);
+  const updatedEl  = pick(['#updated','[data-role="updated"]','.updated','.pill-updated']);
+
+  const setPills = (label, updatedText) => {
+    if (srcLabelEl) srcLabelEl.textContent = label;
+    if (updatedEl)  updatedEl.textContent  = updatedText;
+  };
+
+  const render = (items, label) => {
+    if (window.__renderItems) return window.__renderItems(items, label);
+    if (window.renderItems)   return window.renderItems(items, label);
+    // fallback: 何も無ければ黙って終了（表示側が別名でも壊さない）
+  };
+
+  const setTheme = (t) => root.setAttribute('data-theme', t);
+
+  // ボタン拾い（idが無い/変わってても拾う）
+  const btnByText = (text) => Array.from(document.querySelectorAll('button,a'))
+    .find(el => (el.textContent || '').trim() === text);
+
+  const btnWiki   = document.getElementById('btn-wiki')   || btnByText('Wikipedia 急上昇') || btnByText('Wikipedia');
+  const btnTrends = document.getElementById('btn-trends') || btnByText('Google Trends') || btnByText('Trends');
+  const btnReddit = document.getElementById('btn-reddit') || btnByText('Reddit');
+  const btnHN     = document.getElementById('btn-hn')     || btnByText('Hacker News') || btnByText('HackerNews');
+
+  // 既存の読み込み関数があるなら theme だけ先に合わせて呼ぶ
+  if (btnWiki) {
+    btnWiki.addEventListener('click', () => {
+      setTheme('wiki');
+      setPills('Wikipedia / ja', 'updated: -');
+    }, { capture:true });
+  }
+  if (btnTrends) {
+    btnTrends.addEventListener('click', () => {
+      setTheme('trends');
+      setPills('Google Trends / ja', 'updated: -');
+    }, { capture:true });
+  }
+
+  async function loadReddit() {
+    setTheme('reddit');
+    setPills('Reddit / hot', 'updated: loading...');
+    try {
+      const r = await fetch('https://www.reddit.com/r/all/hot.json?limit=30&raw_json=1');
+      const j = await r.json();
+      const items = (j?.data?.children || []).map((c, i) => ({
+        rank: i + 1,
+        title: c?.data?.title || '(no title)',
+        url: 'https://reddit.com' + (c?.data?.permalink || ''),
+        views: c?.data?.score ?? 0
+      }));
+      render(items, 'Reddit / hot');
+      setPills('Reddit / hot', 'updated: ' + new Date().toISOString());
+    } catch (e) {
+      console.error(e);
+      setPills('Reddit / hot', 'updated: ERROR (see console)');
+    }
+  }
+
+  async function loadHN() {
+    setTheme('hn');
+    setPills('Hacker News / top', 'updated: loading...');
+    try {
+      const ids = await (await fetch('https://hacker-news.firebaseio.com/v0/topstories.json')).json();
+      const top = (ids || []).slice(0, 30);
+      const items = await Promise.all(top.map(async (id, i) => {
+        const it = await (await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)).json();
+        return {
+          rank: i + 1,
+          title: it?.title || '(no title)',
+          url: it?.url || `https://news.ycombinator.com/item?id=${id}`,
+          views: it?.score ?? 0
+        };
+      }));
+      render(items, 'Hacker News / top');
+      setPills('Hacker News / top', 'updated: ' + new Date().toISOString());
+    } catch (e) {
+      console.error(e);
+      setPills('Hacker News / top', 'updated: ERROR (see console)');
+    }
+  }
+
+  if (btnReddit) btnReddit.addEventListener('click', loadReddit);
+  if (btnHN)     btnHN.addEventListener('click', loadHN);
+
+})();
+</script>
 </body>
 </html>
+
 
 
 
