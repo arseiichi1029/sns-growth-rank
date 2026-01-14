@@ -1,509 +1,305 @@
 {
-  "ok": true,
-  "source": "hacker_news_top",
-  "geo": "GLOBAL",
-  "lang": "en",
-  "updatedAt": "2026-01-14T15:33:38.611Z",
+  "updated": "2026-01-14T15:33:38.611Z",
   "items": [
     {
-      "id": 46616488,
+      "rank": 1,
       "title": "SparkFun Officially Dropping AdaFruit due to CoC Violation",
       "url": "https://www.sparkfun.com/official-response",
-      "score": 150,
-      "comments": 86,
-      "by": "yaleman",
-      "time": "2026-01-14T14:34:57.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46616488"
+      "views": 150
     },
     {
-      "id": 46614558,
+      "rank": 2,
       "title": "I Hate GitHub Actions with Passion",
       "url": "https://xlii.space/eng/i-hate-github-actions-with-passion/",
-      "score": 161,
-      "comments": 123,
-      "by": "xlii",
-      "time": "2026-01-14T10:53:13.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46614558"
+      "views": 161
     },
     {
-      "id": 46572307,
+      "rank": 3,
       "title": "Why some clothes shrink in the wash – and how to 'unshrink' them",
       "url": "https://www.swinburne.edu.au/news/2025/08/why-some-clothes-shrink-in-the-wash-and-how-to-unshrink-them/",
-      "score": 30,
-      "comments": 12,
-      "by": "OptionOfT",
-      "time": "2026-01-11T02:58:36.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46572307"
+      "views": 30
     },
     {
-      "id": 46591810,
+      "rank": 4,
       "title": "There's a ridiculous amount of tech in a disposable vape",
       "url": "https://blog.jgc.org/2026/01/theres-ridiculous-amount-of-tech-in.html",
-      "score": 580,
-      "comments": 499,
-      "by": "abnercoimbre",
-      "time": "2026-01-12T17:50:01.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46591810"
+      "views": 580
     },
     {
-      "id": 46614037,
+      "rank": 5,
       "title": "I’m leaving Redis for SolidQueue",
       "url": "https://www.simplethread.com/redis-solidqueue/",
-      "score": 194,
-      "comments": 81,
-      "by": "amalinovic",
-      "time": "2026-01-14T09:25:58.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46614037"
+      "views": 194
     },
     {
-      "id": 46616745,
+      "rank": 6,
       "title": "FBI raids Washington Post reporter's home in 'highly unusual and aggressive' act",
       "url": "https://www.theguardian.com/us-news/2026/jan/14/fbi-raid-washington-post-hannah-natanson",
-      "score": 107,
-      "comments": 21,
-      "by": "echelon_musk",
-      "time": "2026-01-14T14:57:30.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46616745"
+      "views": 107
     },
     {
-      "id": 46557853,
+      "rank": 7,
       "title": "India's Electric Two-Wheeler Market: Rise, Reset and What Comes Next",
       "url": "https://micromobility.io/news/indias-electric-two-wheeler-market-rise-reset-and-what-comes-next",
-      "score": 29,
-      "comments": 21,
-      "by": "prabinjoel",
-      "time": "2026-01-09T19:13:56.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46557853"
+      "views": 29
     },
     {
-      "id": 46614688,
+      "rank": 8,
       "title": "Show HN: Tiny FOSS Compass and Navigation App (<2MB)",
       "url": "https://github.com/CompassMB/MBCompass",
-      "score": 74,
-      "comments": 25,
-      "by": "nativeforks",
-      "time": "2026-01-14T11:09:35.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46614688"
+      "views": 74
     },
     {
-      "id": 46611823,
+      "rank": 9,
       "title": "1000 Blank White Cards",
       "url": "https://en.wikipedia.org/wiki/1000_Blank_White_Cards",
-      "score": 276,
-      "comments": 49,
-      "by": "eieio",
-      "time": "2026-01-14T03:08:37.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46611823"
+      "views": 276
     },
     {
-      "id": 46569175,
+      "rank": 10,
       "title": "Is Rust faster than C?",
       "url": "https://steveklabnik.com/writing/is-rust-faster-than-c/",
-      "score": 157,
-      "comments": 136,
-      "by": "vincentchau",
-      "time": "2026-01-10T19:37:36.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46569175"
+      "views": 157
     },
     {
-      "id": 46615374,
+      "rank": 11,
       "title": "Why NUKEMAP isn't on Google Maps anymore (2019)",
       "url": "https://blog.nuclearsecrecy.com/2019/12/13/why-nukemap-isnt-on-google-maps-anymore/",
-      "score": 87,
-      "comments": 11,
-      "by": "fanf2",
-      "time": "2026-01-14T12:42:02.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46615374"
+      "views": 87
     },
     {
-      "id": 46615235,
+      "rank": 12,
       "title": "Lago (Open-Source Billing) is hiring across teams and geos",
       "url": "https://news.ycombinator.com/item?id=46615235",
-      "score": 1,
-      "comments": 0,
-      "by": "Rafsark",
-      "time": "2026-01-14T12:25:59.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46615235"
+      "views": 1
     },
     {
-      "id": 46616569,
+      "rank": 13,
       "title": "Never-before-seen Linux malware is \"more advanced than typical\"",
       "url": "https://arstechnica.com/security/2026/01/never-before-seen-linux-malware-is-far-more-advanced-than-typical/",
-      "score": 20,
-      "comments": 2,
-      "by": "Brajeshwar",
-      "time": "2026-01-14T14:42:06.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46616569"
+      "views": 20
     },
     {
-      "id": 46616496,
+      "rank": 14,
       "title": "Edge of Emulation: Game Boy Sewing Machines",
       "url": "https://shonumi.github.io/articles/art22.html",
-      "score": 7,
-      "comments": 0,
-      "by": "mosura",
-      "time": "2026-01-14T14:35:50.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46616496"
+      "views": 7
     },
     {
-      "id": 46614285,
+      "rank": 15,
       "title": "System Programming in Linux: A Hands-On Introduction \"Demo\" Programs",
       "url": "https://github.com/stewartweiss/intro-linux-sys-prog",
-      "score": 38,
-      "comments": 2,
-      "by": "teleforce",
-      "time": "2026-01-14T10:08:05.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46614285"
+      "views": 38
     },
     {
-      "id": 46611507,
+      "rank": 16,
       "title": "ASCII Clouds",
       "url": "https://caidan.dev/portfolio/ascii_clouds/",
-      "score": 272,
-      "comments": 50,
-      "by": "majkinetor",
-      "time": "2026-01-14T02:20:42.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46611507"
+      "views": 272
     },
     {
-      "id": 46602591,
+      "rank": 17,
       "title": "Every GitHub object has two IDs",
       "url": "https://www.greptile.com/blog/github-ids",
-      "score": 288,
-      "comments": 65,
-      "by": "dakshgupta",
-      "time": "2026-01-13T15:52:33.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46602591"
+      "views": 288
     },
     {
-      "id": 46609630,
+      "rank": 18,
       "title": "A 40-line fix eliminated a 400x performance gap",
       "url": "https://questdb.com/blog/jvm-current-thread-user-time/",
-      "score": 313,
-      "comments": 66,
-      "by": "bluestreak",
-      "time": "2026-01-13T23:00:36.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46609630"
+      "views": 313
     },
     {
-      "id": 46611348,
+      "rank": 19,
       "title": "Show HN: OSS AI agent that indexes and searches the Epstein files",
       "url": "https://epstein.trynia.ai/",
-      "score": 149,
-      "comments": 74,
-      "by": "jellyotsiro",
-      "time": "2026-01-14T01:56:52.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46611348"
+      "views": 149
     },
     {
-      "id": 46554982,
+      "rank": 20,
       "title": "Putting the \"You\" in CPU (2023)",
       "url": "https://cpu.land/",
-      "score": 78,
-      "comments": 12,
-      "by": "vinhnx",
-      "time": "2026-01-09T15:38:17.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46554982"
+      "views": 78
     },
     {
-      "id": 46579387,
+      "rank": 21,
       "title": "Systematically generating tests that would have caught Anthropic's top‑K bug",
       "url": "https://theorem.dev/blog/anthropic-bug-test/",
-      "score": 40,
-      "comments": 9,
-      "by": "jasongross",
-      "time": "2026-01-11T20:02:21.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46579387"
+      "views": 40
     },
     {
-      "id": 46611667,
+      "rank": 22,
       "title": "The Gleam Programming Language",
       "url": "https://gleam.run/",
-      "score": 206,
-      "comments": 117,
-      "by": "Alupis",
-      "time": "2026-01-14T02:49:25.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46611667"
+      "views": 206
     },
     {
-      "id": 46617108,
+      "rank": 23,
       "title": "Denmark sends military reinforcements to Greenland",
       "url": "https://www.dr.dk/nyheder/indland/groenland/efter-pres-fra-usa-danmark-er-nu-begyndt-sende-militaere-forstaerkninger-til-groenland",
-      "score": 8,
-      "comments": 1,
-      "by": "mooreds",
-      "time": "2026-01-14T15:26:40.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46617108"
+      "views": 8
     },
     {
-      "id": 46605854,
+      "rank": 24,
       "title": "No management needed: anti-patterns in early-stage engineering teams",
       "url": "https://www.ablg.io/blog/no-management-needed",
-      "score": 253,
-      "comments": 274,
-      "by": "tonioab",
-      "time": "2026-01-13T18:54:30.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46605854"
+      "views": 253
     },
     {
-      "id": 46615167,
+      "rank": 25,
       "title": "Servo 2025 Stats",
       "url": "https://blogs.igalia.com/mrego/servo-2025-stats/",
-      "score": 138,
-      "comments": 38,
-      "by": "todsacerdoti",
-      "time": "2026-01-14T12:14:48.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46615167"
+      "views": 138
     },
     {
-      "id": 46605332,
+      "rank": 26,
       "title": "The truth behind the 2026 J.P. Morgan Healthcare Conference",
       "url": "https://www.owlposting.com/p/the-truth-behind-the-2026-jp-morgan",
-      "score": 288,
-      "comments": 68,
-      "by": "abhishaike",
-      "time": "2026-01-13T18:22:00.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46605332"
+      "views": 288
     },
     {
-      "id": 46602737,
+      "rank": 27,
       "title": "vLLM large scale serving: DeepSeek 2.2k tok/s/h200 with wide-ep",
       "url": "https://blog.vllm.ai/2025/12/17/large-scale-serving.html",
-      "score": 131,
-      "comments": 43,
-      "by": "robertnishihara",
-      "time": "2026-01-13T15:59:59.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46602737"
+      "views": 131
     },
     {
-      "id": 46610557,
+      "rank": 28,
       "title": "The $LANG Programming Language",
       "url": "https://news.ycombinator.com/item?id=46610557",
-      "score": 240,
-      "comments": 45,
-      "by": "dang",
-      "time": "2026-01-14T00:17:19.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46610557"
+      "views": 240
     },
     {
-      "id": 46603111,
+      "rank": 29,
       "title": "Are two heads better than one?",
       "url": "https://eieio.games/blog/two-heads-arent-better-than-one/",
-      "score": 190,
-      "comments": 57,
-      "by": "evakhoury",
-      "time": "2026-01-13T16:22:59.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46603111"
+      "views": 190
     },
     {
-      "id": 46579612,
+      "rank": 30,
       "title": "Show HN: 1D-Pong Game at 39C3",
       "url": "https://github.com/ogermer/1d-pong",
-      "score": 54,
-      "comments": 12,
-      "by": "oger",
-      "time": "2026-01-11T20:23:14.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46579612"
+      "views": 54
     },
     {
-      "id": 46584864,
+      "rank": 31,
       "title": "The Emacs Widget Library: A Critique and Case Study",
       "url": "https://www.d12frosted.io/posts/2025-11-26-emacs-widget-library",
-      "score": 100,
-      "comments": 32,
-      "by": "whacked_new",
-      "time": "2026-01-12T06:37:26.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46584864"
+      "views": 100
     },
     {
-      "id": 46604308,
+      "rank": 32,
       "title": "Show HN: The Tsonic Programming Language",
       "url": "https://tsonic.org",
-      "score": 49,
-      "comments": 9,
-      "by": "jeswin",
-      "time": "2026-01-13T17:26:22.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46604308"
+      "views": 49
     },
     {
-      "id": 46616529,
+      "rank": 33,
       "title": "Ask HN: How are you doing RAG locally?",
       "url": "https://news.ycombinator.com/item?id=46616529",
-      "score": 4,
-      "comments": 0,
-      "by": "tmaly",
-      "time": "2026-01-14T14:38:29.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46616529"
+      "views": 4
     },
     {
-      "id": 46603995,
+      "rank": 34,
       "title": "The Tulip Creative Computer",
       "url": "https://github.com/shorepine/tulipcc",
-      "score": 236,
-      "comments": 55,
-      "by": "apitman",
-      "time": "2026-01-13T17:10:42.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46603995"
+      "views": 236
     },
     {
-      "id": 46605490,
+      "rank": 35,
       "title": "AI generated music barred from Bandcamp",
       "url": "https://old.reddit.com/r/BandCamp/comments/1qbw8ba/ai_generated_music_on_bandcamp/",
-      "score": 881,
-      "comments": 658,
-      "by": "cdrnsf",
-      "time": "2026-01-13T18:31:50.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46605490"
+      "views": 881
     },
     {
-      "id": 46554461,
+      "rank": 36,
       "title": "April 9, 1940 a Dish Best Served Cold (2021)",
       "url": "https://todayinhistory.blog/2021/04/09/april-9-1940-a-dish-best-served-cold/",
-      "score": 69,
-      "comments": 11,
-      "by": "vinnyglennon",
-      "time": "2026-01-09T14:50:46.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46554461"
+      "views": 69
     },
     {
-      "id": 46604250,
+      "rank": 37,
       "title": "How to make a damn website (2024)",
       "url": "https://lmnt.me/blog/how-to-make-a-damn-website.html",
-      "score": 232,
-      "comments": 74,
-      "by": "birdculture",
-      "time": "2026-01-13T17:23:46.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46604250"
+      "views": 232
     },
     {
-      "id": 46602102,
+      "rank": 38,
       "title": "Scott Adams has died",
       "url": "https://www.youtube.com/watch?v=Rs_JrOIo3SE",
-      "score": 1018,
-      "comments": 1583,
-      "by": "ekianjo",
-      "time": "2026-01-13T15:18:43.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46602102"
+      "views": 1018
     },
     {
-      "id": 46616167,
+      "rank": 39,
       "title": "FBI Searches Home of Washington Post Journalist for Classified Documents",
       "url": "https://www.nytimes.com/2026/01/14/us/politics/fbi-washington-post-journalist.html",
-      "score": 16,
-      "comments": 0,
-      "by": "perihelions",
-      "time": "2026-01-14T14:00:08.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46616167"
+      "views": 16
     },
     {
-      "id": 46554774,
+      "rank": 40,
       "title": "Handling secrets (somewhat) securely in shells",
       "url": "https://linus.schreibt.jetzt/posts/shell-secrets.html",
-      "score": 84,
-      "comments": 42,
-      "by": "todsacerdoti",
-      "time": "2026-01-09T15:17:45.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46554774"
+      "views": 84
     },
     {
-      "id": 46611550,
+      "rank": 41,
       "title": "Stop using natural language interfaces",
       "url": "https://tidepool.leaflet.pub/3mcbegnuf2k2i",
-      "score": 105,
-      "comments": 52,
-      "by": "steveklabnik",
-      "time": "2026-01-14T02:29:08.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46611550"
+      "views": 105
     },
     {
-      "id": 46605950,
+      "rank": 42,
       "title": "A university got itself banned from the Linux kernel (2021)",
       "url": "https://www.theverge.com/2021/4/30/22410164/linux-kernel-university-of-minnesota-banned-open-source",
-      "score": 135,
-      "comments": 64,
-      "by": "italophil",
-      "time": "2026-01-13T18:58:55.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46605950"
+      "views": 135
     },
     {
-      "id": 46611548,
+      "rank": 43,
       "title": "Show HN: Cachekit – High performance caching policies library in Rust",
       "url": "https://github.com/OxidizeLabs/cachekit",
-      "score": 42,
-      "comments": 7,
-      "by": "failsafe",
-      "time": "2026-01-14T02:28:52.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46611548"
+      "views": 42
     },
     {
-      "id": 46550453,
+      "rank": 44,
       "title": "Agonist-Antagonist Myoneural Interface",
       "url": "https://www.media.mit.edu/projects/agonist-antagonist-myoneural-interface-ami/overview/",
-      "score": 65,
-      "comments": 5,
-      "by": "kaycebasques",
-      "time": "2026-01-09T05:44:58.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46550453"
+      "views": 65
     },
     {
-      "id": 46589842,
+      "rank": 45,
       "title": "Why we built our own background agent",
       "url": "https://builders.ramp.com/post/why-we-built-our-background-agent",
-      "score": 112,
-      "comments": 21,
-      "by": "jrsj",
-      "time": "2026-01-12T15:36:36.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46589842"
+      "views": 112
     },
     {
-      "id": 46605675,
+      "rank": 46,
       "title": "Show HN: Nogic – VS Code extension that visualizes your codebase as a graph",
       "url": "https://marketplace.visualstudio.com/items?itemName=Nogic.nogic",
-      "score": 119,
-      "comments": 44,
-      "by": "davelradindra",
-      "time": "2026-01-13T18:43:28.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46605675"
+      "views": 119
     },
     {
-      "id": 46616497,
+      "rank": 47,
       "title": "Legacy of the Necromancer (Amiga and PC DOS)",
       "url": "https://www.gamesthatwerent.com/2026/01/legacy-of-the-necromancer/",
-      "score": 4,
-      "comments": 0,
-      "by": "ibobev",
-      "time": "2026-01-14T14:35:53.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46616497"
+      "views": 4
     },
     {
-      "id": 46609492,
+      "rank": 48,
       "title": "When hardware goes end-of-life, companies need to open-source the software",
       "url": "https://www.marcia.no/words/eol",
-      "score": 348,
-      "comments": 111,
-      "by": "Marciplan",
-      "time": "2026-01-13T22:49:51.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46609492"
+      "views": 348
     },
     {
-      "id": 46608840,
+      "rank": 49,
       "title": "We can't have nice things because of AI scrapers",
       "url": "https://blog.metabrainz.org/2025/12/11/we-cant-have-nice-things-because-of-ai-scrapers/",
-      "score": 423,
-      "comments": 229,
-      "by": "LorenDB",
-      "time": "2026-01-13T21:57:32.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46608840"
+      "views": 423
     },
     {
-      "id": 46562855,
+      "rank": 50,
       "title": "The Stick in the Stream",
       "url": "https://randsinrepose.com/archives/the-stick-in-the-stream/",
-      "score": 11,
-      "comments": 1,
-      "by": "zdw",
-      "time": "2026-01-10T04:44:39.000Z",
-      "hn": "https://news.ycombinator.com/item?id=46562855"
+      "views": 11
     }
   ]
 }
