@@ -1,9 +1,14 @@
-﻿name: update extra sources (reddit + hn)
+﻿name: update extra (reddit + hn)
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"  # 30分ごと
+    - cron: "*/30 * * * *"   # 30分ごと
+  push:
+    paths:
+      - scripts/update_trends_reddit.mjs
+      - scripts/update_trends_hn.mjs
+      - .github/workflows/update_extra.yml
 
 permissions:
   contents: write
@@ -16,24 +21,26 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
 
-      - name: Update Reddit + HN
-        run: |
-          mkdir -p docs/data
-          node scripts/update_trends_reddit.mjs
-          node scripts/update_trends_hn.mjs
+      - name: Prepare output dir
+        run: mkdir -p docs/data
 
-      - name: Commit and push (if changed)
+      - name: Update reddit
+        run: node scripts/update_trends_reddit.mjs
+
+      - name: Update hn
+        run: node scripts/update_trends_hn.mjs
+
+      - name: Commit if changed
         run: |
-          mkdir -p docs/data
+          git status --porcelain
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/trends_reddit.json docs/data/trends_hn.json
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/reddit.json docs/data/hn.json
           if git diff --cached --quiet; then
             echo "No changes"
             exit 0
           fi
           git commit -m "data: update reddit + hn"
           git push
-
