@@ -1,9 +1,9 @@
 ﻿name: Update data (daily)
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "15 19 * * *"  # JST 04:15 (GitHub ActionsはUTC)
+    - cron: "0 0 * * *"   # 毎日 09:00 JST（UTC 00:00）
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -30,8 +30,8 @@ jobs:
       - name: Run updater (Wikipedia)
         run: node scripts/update.mjs
 
-      - name: Run updater (Google Trends) (non-blocking)
-        run: node scripts/update_trends_google.mjs || true
+      - name: Run updater (Google Trends)
+        run: node scripts/update_trends_google.mjs
 
       - name: Commit & push if changed
         run: |
