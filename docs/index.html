@@ -93,8 +93,13 @@
           return;
         }
 
-        metaLeft.textContent = `${data.source} / ${data.geo || ""} / ${data.date || ""}`;
-        metaRight.textContent = `updated: ${data.updatedAt || ""}`;
+const locale = data.lang || data.geo || "JP";
+const date = data.date || "";
+const updated = data.updatedAt || data.updated_at || data.generatedAt || "";
+
+metaLeft.textContent = `${locale} / ${date}`.trim();
+metaRight.textContent = updated ? `updated: ${updated}` : "";
+
 
         const items = (data.items || []).slice(0, 50);
         const rows = items.map((it) => {
