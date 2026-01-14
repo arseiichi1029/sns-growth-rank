@@ -1,25 +1,13 @@
-﻿<!doctype html>
+﻿Set-Content -Encoding UTF8 docs\index.html @'
+<!doctype html>
 <html lang="ja">
 <head>
-  
-<!-- SEO:BEGIN -->
-<title>SNS Growth Rank | Wikipedia/Trends/Reddit/HN 横断急上昇まとめ</title>
-<meta name="description" content="Wikipedia急上昇・Google Trends・Reddit・Hacker News を横断して、いま伸びてる話題を1ページで把握。">
-<link rel="canonical" href="https://mikann20041029.github.io/sns-growth-rank/">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<meta property="og:type" content="website">
-<meta property="og:title" content="SNS Growth Rank | Wikipedia/Trends/Reddit/HN 横断急上昇まとめ">
-<meta property="og:description" content="Wikipedia急上昇・Google Trends・Reddit・Hacker News を横断して、いま伸びてる話題を1ページで把握。">
-<meta property="og:url" content="https://mikann20041029.github.io/sns-growth-rank/">
-<meta property="og:site_name" content="SNS Growth Rank">
-<meta name="twitter:card" content="summary">
-<!-- SEO:END -->
-<meta charset="utf-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SNS Growth Rank</title>
   <link rel="stylesheet" href="./styles.css?v=2" />
-  <meta name="description" content="Wikipedia急上昇 / Google Trends を自動更新で並べる" />
 </head>
+
 <body data-theme="wiki">
   <div class="wrap">
     <div class="header">
@@ -31,19 +19,18 @@
         </div>
       </div>
 
-      <div  param($m) $m.Value >
+      <div class="tabs">
         <button class="btn active" id="tabWiki" type="button">Wikipedia 急上昇</button>
-        <button class="btn" id="tabTrends" type="button">Google Trends<button id="btn-reddit" class="source-tab source-tab tab">Reddit</button>
-<button id="btn-hn" class="source-tab source-tab tab">Hacker News</button>
-</button>
+        <button class="btn" id="tabTrends" type="button">Google Trends</button>
+        <button class="btn" id="btn-reddit" type="button">Reddit</button>
+        <button class="btn" id="btn-hn" type="button">Hacker News</button>
       </div>
     </div>
 
-    <!-- ad slot (top) -->
     <div class="ad" id="ad-top">AD PLACEHOLDER (top)</div>
 
     <div class="metaRow">
-      <div><span class="badge" id="metaLeft">ja</span></div>
+      <div><span class="badge" id="metaLeft">Wikipedia / ja</span></div>
       <div><span class="badge" id="metaRight">updated: -</span></div>
     </div>
 
@@ -52,7 +39,6 @@
       <div class="list" id="list"></div>
     </div>
 
-    <!-- ad slot (bottom) -->
     <div class="ad" id="ad-bottom">AD PLACEHOLDER (bottom)</div>
 
     <div class="footer">
@@ -64,36 +50,62 @@
 const $ = (id) => document.getElementById(id);
 
 const PATHS = {
-  wiki: './data/wiki.json',
+  wiki:   './data/wiki.json',
   trends: './data/trends_google.json',
+  reddit: './data/trends_reddit.json',
+  hn:     './data/trends_hn.json',
 };
 
 function setActive(mode){
   document.body.setAttribute('data-theme', mode);
+
   $('tabWiki').classList.toggle('active', mode === 'wiki');
   $('tabTrends').classList.toggle('active', mode === 'trends');
-  $('metaLeft').textContent = mode === 'wiki' ? 'Wikipedia / ja' : 'Google Trends / ja';
-  $('dataPath').textContent = (mode === 'wiki') ? PATHS.wiki : PATHS.trends;
+  $('btn-reddit').classList.toggle('active', mode === 'reddit');
+  $('btn-hn').classList.toggle('active', mode === 'hn');
+
+  const label =
+    mode === 'wiki'   ? 'Wikipedia / ja' :
+    mode === 'trends' ? 'Google Trends / ja' :
+    mode === 'reddit' ? 'Reddit / hot' :
+                        'Hacker News / top';
+
+  $('metaLeft').textContent = label;
+  $('dataPath').textContent = PATHS[mode] || '-';
 }
 
-function fmtViews(n){
-  if (n === 0) return '0 views';
-  if (!n) return '-';
-  return new Intl.NumberFormat('en-US').format(n) + ' views';
+function fmtNum(n){
+  const x = Number(n || 0);
+  return new Intl.NumberFormat('en-US').format(x);
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, (c)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 }
 
 function clearList(){
   $('list').innerHTML = '';
 }
 
+function showNotice(kind, text){
+  const n = $('notice');
+  n.className = 'notice ' + (kind || '');
+  n.textContent = text;
+}
+
 function renderItems(mode, items){
   clearList();
   const frag = document.createDocumentFragment();
-  items.slice(0, 50).forEach((it, i) => {
-    const rank = it.rank ?? (i+1);
+
+  (items || []).slice(0, 50).forEach((it, i) => {
+    const rank  = it.rank ?? (i+1);
     const title = it.title ?? it.query ?? it.name ?? '(no title)';
-    const url = it.url ?? it.link ?? '';
-    const views = it.views ?? it.value ?? 0;
+    const url   = it.url ?? it.link ?? it.permalink ?? '#';
+    const val   =
+      mode === 'wiki'   ? (it.views ?? 0) :
+      mode === 'trends' ? (it.value ?? it.score ?? 0) :
+      mode === 'reddit' ? (it.score ?? it.views ?? 0) :
+                          (it.score ?? it.views ?? 0);
 
     const row = document.createElement('div');
     row.className = 'item';
@@ -103,22 +115,17 @@ function renderItems(mode, items){
         <div class="title">${escapeHtml(title)}</div>
         <div class="url">${escapeHtml(url)}</div>
       </div>
-      <div class="value">${mode === 'wiki' ? fmtViews(views) : '0 views'}</div>
+      <div class="value">${fmtNum(val)}</div>
     `;
-    row.addEventListener('click', () => { if (url) window.open(url, '_blank', 'noopener'); });
+
+    row.addEventListener('click', () => {
+      if (url && url !== '#') window.open(url, '_blank', 'noopener');
+    });
+
     frag.appendChild(row);
   });
+
   $('list').appendChild(frag);
-}
-
-function showNotice(kind, text){
-  const n = $('notice');
-  n.className = 'notice ' + (kind || '');
-  n.textContent = text;
-}
-
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, (c)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 }
 
 async function load(mode){
@@ -126,21 +133,27 @@ async function load(mode){
   showNotice('', 'loading...');
   clearList();
 
-  const url = (mode === 'wiki' ? PATHS.wiki : PATHS.trends) + '?v=' + Date.now();
+  const url = (PATHS[mode] || PATHS.wiki) + '?v=' + Date.now();
+
   try{
     const res = await fetch(url, { cache: 'no-store' });
+    if(!res.ok) throw new Error(res.status + ' ' + url);
+
     const json = await res.json();
 
-    $('metaRight').textContent = 'updated: ' + (json.updatedAt || '-');
+    $('metaRight').textContent = 'updated: ' + (json.updatedAt || json.updated || '-');
 
-    if (!json.ok){
+    if (json.ok === false){
       showNotice('err', 'error: ' + (json.error || 'unknown'));
       return;
     }
 
     const items = json.items || [];
     showNotice('ok', 'loaded: ' + items.length);
+
+    // Reddit/HNは views が無いので score を使って表示する
     renderItems(mode, items);
+
   }catch(e){
     showNotice('err', 'error: ' + (e && e.message ? e.message : String(e)));
   }
@@ -148,423 +161,12 @@ async function load(mode){
 
 $('tabWiki').addEventListener('click', ()=>load('wiki'));
 $('tabTrends').addEventListener('click', ()=>load('trends'));
+$('btn-reddit').addEventListener('click', ()=>load('reddit'));
+$('btn-hn').addEventListener('click', ()=>load('hn'));
 
 load('wiki');
 </script>
-<!-- ===== DESKTOP SIDE ADS (PC only) ===== -->
-<div id="ad-left" class="ad-side ad-left">AD PLACEHOLDER (left)</div>
-<div id="ad-right" class="ad-side ad-right">AD PLACEHOLDER (right)</div>
-<!-- ====================================== -->
-<!-- UNIFIED:BEGIN -->
-<div class="unified-wrap">
-  <div class="unified-head">
-    <div class="unified-title">今日の急上昇まとめ（横断）</div>
-    <div class="unified-sub">Wikipedia / Google Trends / Reddit / Hacker News をまとめて表示</div>
-  </div>
 
-  <div class="unified-panel">
-    <div class="unified-status" id="unifiedStatus">loading...</div>
-    <div class="unified-scroll">
-      <table class="unified-table" id="unifiedTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>title</th>
-            <th>source</th>
-            <th class="unified-right">score</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<script>
-(function(){
-  const  = document.getElementById('unifiedStatus');
-  const   = document.querySelector('#unifiedTable tbody');
-
-  const SOURCE = {
-    wiki:  { key:'wiki',  label:'Wikipedia',    cls:'tag-wiki'  },
-    gtr:   { key:'gtr',   label:'GoogleTrends', cls:'tag-gtr'   },
-    reddit:{ key:'reddit',label:'Reddit',       cls:'tag-reddit'},
-    hn:    { key:'hn',    label:'HackerNews',   cls:'tag-hn'    },
-  };
-
-  function pick(o, keys){
-    for (const k of keys){
-      if (o && o[k] != null && String(o[k]).trim() !== '') return o[k];
-    }
-    return '';
-  }
-
-  // どんなJSONでも「それっぽい項目」を拾って統一する（壊れにくい）
-  function normalizeItems(srcKey, data){
-    const raw = (data && (data.items || data.data || data.results || data.children || data.hits)) || data;
-    const arr = Array.isArray(raw) ? raw : (raw && Array.isArray(raw.items) ? raw.items : []);
-    const out = [];
-
-    for (let i=0; i<arr.length; i++){
-      const it = arr[i] || {};
-      const title = pick(it, ['title','name','headline','text','story_title']);
-      const url   = pick(it, ['url','link','permalink','story_url']);
-
-      // 数値っぽいのがあれば拾う（views/score/points/comments など）
-      const metric =
-        Number(pick(it, ['views','viewCount','score','points','upvotes','ups','num_comments','comments','commentCount'])) || 0;
-
-      // スコアは「順位優先 + 数値があるなら少し加点」で雑に統一
-      const rank = i + 1;
-      const s = (1 / rank) * 1000 + Math.min(metric, 100000) * 0.01;
-
-      if (!title) continue;
-
-      out.push({
-        title,
-        url,
-        source: srcKey,
-        score: Math.round(s)
-      });
-    }
-    return out;
-  }
-
-  async function fetchJson(path){
-    const r = await fetch(path, { cache:'no-store' });
-    if (!r.ok) throw new Error(r.status + ' ' + path);
-    return await r.json();
-  }
-
-  async function main(){
-    try{
-      const files = [
-        {src:'wiki',   path:'./data/wiki_ja.json'},
-        {src:'gtr',    path:'./data/trends_google.json'},
-        {src:'reddit', path:'./data/trends_reddit.json'},
-        {src:'hn',     path:'./data/trends_hn.json'},
-      ];
-
-      const all = [];
-      for (const f of files){
-        try{
-          const j = await fetchJson(f.path);
-          if (j && j.ok === false && j.error) {
-            // 失敗でも落とさず続行
-            console.warn('source error', f.src, j.error);
-          }
-          all.push(...normalizeItems(f.src, j));
-        }catch(e){
-          console.warn('fetch error', f.src, e);
-        }
-      }
-
-      // ソース被り（同じtitle）を軽く排除
-      const seen = new Set();
-      const uniq = [];
-      for (const x of all.sort((a,b)=>b.score-a.score)){
-        const key = (x.title || '').toLowerCase().trim();
-        if (!key) continue;
-        if (seen.has(key)) continue;
-        seen.add(key);
-        uniq.push(x);
-        if (uniq.length >= 50) break;
-      }
-
-      .innerHTML = '';
-      uniq.forEach((x, idx) => {
-        const s = SOURCE[x.source] || {label:x.source, cls:'tag-wiki'};
-        const tr = document.createElement('tr');
-
-        const safeUrl = (x.url && String(x.url).startsWith('http')) ? x.url : '';
-        const titleHtml = safeUrl
-          ? '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(x.title) + '</a>'
-          : escapeHtml(x.title);
-
-        tr.innerHTML = 
-          <td class="unified-rank">#</td>
-          <td class="unified-titlecell"></td>
-          <td><span class="src-tag "></span></td>
-          <td class="unified-right"></td>
-        ;
-        .appendChild(tr);
-      });
-
-      .textContent = 'loaded: ' + uniq.length;
-    }catch(e){
-      console.error(e);
-      .textContent = 'error';
-    }
-  }
-
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll('&','&amp;')
-      .replaceAll('<','&lt;')
-      .replaceAll('>','&gt;')
-      .replaceAll('"','&quot;')
-      .replaceAll("'",'&#39;');
-  }
-
-  main();
-})();
-</script>
-<!-- UNIFIED:END -->
-<script>
-(function(){
-  const root = document.documentElement;
-
-  async function loadReddit(){
-    root.setAttribute("data-theme","reddit");
-    const r = await fetch("./data/trends_reddit.json?cb="+Date.now());
-    const j = await r.json();
-    const items = j.data.children.map((c,i)=>({
-      rank:i+1,
-      title:c.data.title,
-      url:"https://reddit.com"+c.data.permalink,
-      views:c.data.score
-    }));
-    window.__renderItems && window.__renderItems(items, "Reddit / hot");
-  }
-
-  async function loadHN(){
-  root.setAttribute("data-theme","hn");
-  const r = await fetch("./data/trends_hn.json?cb="+Date.now());
-  const j = await r.json();
-  const items = (j.items||[]).map((it,i)=>({
-    rank: i+1,
-    title: it.title || "(no title)",
-    url: it.url || ("https://news.ycombinator.com/item?id=" + (it.id||"")),
-    views: it.score || it.views || 0
-  }));
-  window.__renderItems && window.__renderItems(items, "Hacker News / top");
-})();
-</script>
-<script id="__extra_sources_patch_v1">
-(() => {
-  const root = document.documentElement;
-
-  // 既存UIの「表示元ラベル」「updated」を拾う（idが無くても拾う）
-  const pick = (sels) => sels.map(s => document.querySelector(s)).find(Boolean);
-  const srcLabelEl = pick(['#src-label','[data-role="source"]','.src-badge','.source-badge','.pill-source']);
-  const updatedEl  = pick(['#updated','[data-role="updated"]','.updated','.pill-updated']);
-
-  const setPills = (label, updatedText) => {
-    if (srcLabelEl) srcLabelEl.textContent = label;
-    if (updatedEl)  updatedEl.textContent  = updatedText;
-  };
-
-  const render = (items, label) => {
-    if (window.__renderItems) return window.__renderItems(items, label);
-    if (window.renderItems)   return window.renderItems(items, label);
-    // fallback: 何も無ければ黙って終了（表示側が別名でも壊さない）
-  };
-
-  const setTheme = (t) => root.setAttribute('data-theme', t);
-
-  // ボタン拾い（idが無い/変わってても拾う）
-  const btnByText = (text) => Array.from(document.querySelectorAll('button,a'))
-    .find(el => (el.textContent || '').trim() === text);
-
-  const btnWiki   = document.getElementById('btn-wiki')   || btnByText('Wikipedia 急上昇') || btnByText('Wikipedia');
-  const btnTrends = document.getElementById('btn-trends') || btnByText('Google Trends') || btnByText('Trends');
-  const btnReddit = document.getElementById('btn-reddit') || btnByText('Reddit');
-  const btnHN     = document.getElementById('btn-hn')     || btnByText('Hacker News') || btnByText('HackerNews');
-
-  // 既存の読み込み関数があるなら theme だけ先に合わせて呼ぶ
-  if (btnWiki) {
-    btnWiki.addEventListener('click', () => {
-      setTheme('wiki');
-      setPills('Wikipedia / ja', 'updated: -');
-    }, { capture:true });
-  }
-  if (btnTrends) {
-    btnTrends.addEventListener('click', () => {
-      setTheme('trends');
-      setPills('Google Trends / ja', 'updated: -');
-    }, { capture:true });
-  }
-
-  async function loadReddit() {
-    setTheme('reddit');
-    setPills('Reddit / hot', 'updated: loading...');
-    try {
-      const r = await fetch('https://www.reddit.com/r/all/hot.json?limit=30&raw_json=1');
-      const j = await r.json();
-      const items = (j?.data?.children || []).map((c, i) => ({
-        rank: i + 1,
-        title: c?.data?.title || '(no title)',
-        url: 'https://reddit.com' + (c?.data?.permalink || ''),
-        views: c?.data?.score ?? 0
-      }));
-      render(items, 'Reddit / hot');
-      setPills('Reddit / hot', 'updated: ' + new Date().toISOString());
-    } catch (e) {
-      console.error(e);
-      setPills('Reddit / hot', 'updated: ERROR (see console)');
-    }
-  }
-
-  async function loadHN() {
-    setTheme('hn');
-    setPills('Hacker News / top', 'updated: loading...');
-    try {
-      const ids = await (await fetch('https://hacker-news.firebaseio.com/v0/topstories.json')).json();
-      const top = (ids || []).slice(0, 30);
-      const items = await Promise.all(top.map(async (id, i) => {
-        const it = await (await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)).json();
-        return {
-          rank: i + 1,
-          title: it?.title || '(no title)',
-          url: it?.url || `https://news.ycombinator.com/item?id=${id}`,
-          views: it?.score ?? 0
-        };
-      }));
-      render(items, 'Hacker News / top');
-      setPills('Hacker News / top', 'updated: ' + new Date().toISOString());
-    } catch (e) {
-      console.error(e);
-      setPills('Hacker News / top', 'updated: ERROR (see console)');
-    }
-  }
-
-  if (btnReddit) btnReddit.addEventListener('click', loadReddit);
-  if (btnHN)     btnHN.addEventListener('click', loadHN);
-
-})();
-</script>
-<script>
-/* === PATCH: support new JSON format (updatedAt + score/comments) === */
-window.__renderItems = function(items, label){
-  const tbody = document.querySelector("#list");
-  if(!tbody) return;
-  document.querySelector("#sourceLabel").textContent = label || "";
-  tbody.innerHTML = "";
-  items.forEach((it, idx) => {
-    const rank = it.rank ?? (idx+1);
-    const title = it.title ?? "(no title)";
-    const url = it.url ?? "#";
-    const views = it.views ?? it.score ?? 0;
-
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td class="rank">#${rank}</td>
-      <td class="title">
-        <div class="t">${title}</div>
-        <a class="u" href="${url}" target="_blank" rel="noopener">${url}</a>
-      </td>
-      <td class="views">${Number(views).toLocaleString()} ${it.views!=null ? "views" : "score"}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-};
-
-window.__loadJSON = async function(path, label){
-  const res = await fetch(path + (path.includes("?") ? "&" : "?") + "t=" + Date.now(), {cache:"no-store"});
-  const data = await res.json();
-  const items = data.items || [];
-  window.__renderItems(items, label);
-  const upd = data.updated || data.updatedAt || "";
-  const updEl = document.querySelector("#updated");
-  if(updEl) updEl.textContent = upd ? ("updated: " + upd) : "updated: -";
-};
-/* === END PATCH === */
-</script>
 </body>
 </html>
-
-<!-- EXTRA_SOURCES:START -->
-<script>
-(function(){
-  // cache bust
-  const bust = () => "t=" + Date.now();
-
-  async function loadFromLocalJson(kind, label){
-    try{
-      const root = document.documentElement;
-      root.setAttribute("data-theme", kind);
-
-      const url = "./data/" + kind + ".json?" + bust();
-      const res = await fetch(url, { cache: "no-store" });
-      if(!res.ok) throw new Error(kind + " json fetch failed: " + res.status);
-
-      const j = await res.json();
-      const items = (j.items || []).map((it, i) => ({
-        rank: it.rank ?? (i+1),
-        title: it.title ?? "(no title)",
-        url: it.url ?? "#",
-        views: it.views ?? 0
-      }));
-
-      if (window.__renderItems) window.__renderItems(items, label);
-
-      // updated badge (もし関数があるなら使う / 無ければ無視)
-      if (window.__setUpdated) window.__setUpdated(j.updated || "");
-    } catch(e){
-      console.error(e);
-      if (window.__renderItems) window.__renderItems([], label + " (load failed)");
-    }
-  }
-
-  document.getElementById("btn-reddit")?.addEventListener("click", () => loadFromLocalJson("reddit", "Reddit / hot"));
-  document.getElementById("btn-hn")?.addEventListener("click", () => loadFromLocalJson("hn", "Hacker News / top"));
-})();
-<script>
-const root = document.documentElement;
-const listEl = document.getElementById("list");
-
-function renderItems(items, label){
-  listEl.innerHTML = "";
-  items.forEach(it=>{
-    const row = document.createElement("div");
-    row.className = "row";
-    row.innerHTML = `
-      <div class="rank">#${it.rank}</div>
-      <div class="title">
-        <a href="${it.url}" target="_blank" rel="noopener">${it.title}</a>
-      </div>
-      <div class="views">${it.views ?? 0}</div>
-    `;
-    listEl.appendChild(row);
-  });
-  document.getElementById("source-label").textContent = label;
-}
-window.__renderItems = renderItems;
-
-// Reddit
-async function loadReddit(){
-  root.setAttribute("data-theme","reddit");
-  const r = await fetch("./data/trends_reddit.json?cb="+Date.now());
-  const j = await r.json();
-  const items = j.items.map((it,i)=>({
-    rank: i+1,
-    title: it.title,
-    url: it.permalink || it.url,
-    views: it.score
-  }));
-  renderItems(items,"Reddit / hot");
-}
-
-// Hacker News
-async function loadHN(){
-  root.setAttribute("data-theme","hn");
-  const r = await fetch("./data/trends_hn.json?cb="+Date.now());
-  const j = await r.json();
-  const items = j.items.map((it,i)=>({
-    rank: i+1,
-    title: it.title,
-    url: it.url || ("https://news.ycombinator.com/item?id="+it.id),
-    views: it.score
-  }));
-  renderItems(items,"Hacker News / top");
-}
-
-document.getElementById("btn-reddit").onclick = loadReddit;
-document.getElementById("btn-hn").onclick = loadHN;
-</script>
-
-
-
-
-
-
+'@
