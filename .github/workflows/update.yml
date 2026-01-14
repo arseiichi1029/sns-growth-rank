@@ -31,7 +31,9 @@ jobs:
         run: node scripts/update.mjs
 
       - name: Run updater (Google Trends)
-        run: node scripts/update_trends_google.mjs
+  	run: node scripts/update_trends_google.mjs || true
+
+
 
       - name: Commit & push if changed
         run: |
