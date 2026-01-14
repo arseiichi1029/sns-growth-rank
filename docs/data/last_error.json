@@ -1,0 +1,5 @@
+{
+  "ok": false,
+  "at": "2026-01-14T06:45:32.496Z",
+  "error": "fetch failed: 404 https://trends.google.com/trends/trendingsearches/daily/rss?geo=JP"
+}

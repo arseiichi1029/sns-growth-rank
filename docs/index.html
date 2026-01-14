@@ -1,75 +1,139 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SNS Growth Rank</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
-      margin: 0;
-      padding: 24px;
-    }
-    h1 {
-      margin-bottom: 4px;
-    }
-    .sub {
-      color: #94a3b8;
-      margin-bottom: 24px;
-    }
-    .item {
-      padding: 12px 16px;
-      border-bottom: 1px solid #1e293b;
-    }
-    .rank {
-      font-weight: bold;
-      margin-right: 8px;
-      color: #38bdf8;
-    }
-    a {
-      color: #e5e7eb;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .views {
-      color: #94a3b8;
-      font-size: 0.9em;
-    }
+    :root { color-scheme: dark; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", sans-serif; background:#071426; color:#e8f0ff; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 28px 18px 60px; }
+    h1 { margin:0 0 6px; font-size: 36px; letter-spacing: .2px; }
+    .sub { opacity:.85; margin-bottom: 18px; }
+    .tabs { display:flex; gap:10px; flex-wrap:wrap; margin: 14px 0 18px; }
+    .tab { border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); color:#dbe7ff; padding:10px 12px; border-radius: 12px; cursor:pointer; user-select:none; }
+    .tab.active { background: rgba(86,140,255,.25); border-color: rgba(86,140,255,.45); }
+    .meta { opacity:.8; margin: 10px 0 12px; }
+    .list { border-top: 1px solid rgba(255,255,255,.10); }
+    .row { display:flex; justify-content:space-between; gap:16px; padding: 14px 6px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .left { min-width: 0; }
+    .rank { color:#6fb3ff; font-weight:700; margin-right: 8px; }
+    .title { color:#eaf2ff; text-decoration:none; }
+    .title:hover { text-decoration: underline; }
+    .small { opacity:.82; font-size: 13px; margin-top: 3px; }
+    .right { text-align:right; white-space:nowrap; opacity:.9; }
+    .pill { display:inline-block; padding: 2px 8px; border-radius: 999px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); font-size: 12px; margin-left: 6px; }
+    .img { width: 26px; height: 26px; border-radius: 6px; vertical-align: middle; margin-right: 8px; }
   </style>
 </head>
 <body>
-  <h1>SNS Growth Rank</h1>
-  <div class="sub">Wikipedia 急上昇（自動更新・請求ゼロ）</div>
+  <div class="wrap">
+    <h1>SNS Growth Rank</h1>
+    <div class="sub">トレンド源まとめ（自動更新・請求ゼロ）</div>
 
-  <div id="list">loading...</div>
+    <div class="tabs" id="tabs"></div>
+    <div class="meta" id="meta"></div>
+    <div class="list" id="list"></div>
+  </div>
 
-  <script>
-    fetch("./data/wiki.json")
-      .then(res => res.json())
-      .then(data => {
-        const list = document.getElementById("list");
-        list.innerHTML = "";
-        data.items.forEach(item => {
-          const div = document.createElement("div");
-          div.className = "item";
-          div.innerHTML = `
-            <span class="rank">#${item.rank}</span>
-            <a href="${item.url}" target="_blank" rel="noopener">
-              ${item.title}
+<script>
+const TABS = [
+  { key: "wiki",    label: "Wikipedia 急上昇", file: "data/wiki.json" },
+  { key: "trends",  label: "Google Trends JP", file: "data/trends.json" },
+  { key: "hn",      label: "Hacker News",      file: "data/hn.json" },
+  { key: "apps",    label: "App Store 無料",    file: "data/apps.json" }
+];
+
+const elTabs = document.getElementById("tabs");
+const elMeta = document.getElementById("meta");
+const elList = document.getElementById("list");
+
+function esc(s){ return (s ?? "").toString().replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+
+function setActive(key){
+  [...elTabs.children].forEach(b => b.classList.toggle("active", b.dataset.key === key));
+}
+
+async function loadTab(key){
+  const tab = TABS.find(t => t.key === key) || TABS[0];
+  setActive(tab.key);
+
+  const bust = Date.now();
+  const res = await fetch(tab.file + "?v=" + bust, { cache: "no-store" });
+  const data = await res.json();
+
+  // meta
+  const d = esc(data.date || "");
+  elMeta.textContent = (tab.label + (d ? " / " + d : ""));
+
+  // list
+  const items = data.items || [];
+  elList.innerHTML = items.map(it => {
+    if (tab.key === "wiki") {
+      return `
+        <div class="row">
+          <div class="left">
+            <span class="rank">#${esc(it.rank)}</span>
+            <a class="title" href="${esc(it.url)}" target="_blank" rel="noreferrer">${esc(it.title)}</a>
+            <div class="small">${Number(it.views||0).toLocaleString()} views</div>
+          </div>
+          <div class="right"></div>
+        </div>`;
+    }
+
+    if (tab.key === "trends") {
+      return `
+        <div class="row">
+          <div class="left">
+            <span class="rank">#${esc(it.rank)}</span>
+            <a class="title" href="${esc(it.url)}" target="_blank" rel="noreferrer">${esc(it.title)}</a>
+            <div class="small">${esc(it.traffic || "")}${it.pubDate ? " / " + esc(it.pubDate) : ""}</div>
+          </div>
+          <div class="right"></div>
+        </div>`;
+    }
+
+    if (tab.key === "hn") {
+      return `
+        <div class="row">
+          <div class="left">
+            <span class="rank">#${esc(it.rank)}</span>
+            <a class="title" href="${esc(it.url)}" target="_blank" rel="noreferrer">${esc(it.title)}</a>
+            <div class="small">
+              <a class="title" href="${esc(it.hn)}" target="_blank" rel="noreferrer">HN</a>
+              <span class="pill">${Number(it.points||0)} pts</span>
+              <span class="pill">${Number(it.comments||0)} comments</span>
+            </div>
+          </div>
+          <div class="right"></div>
+        </div>`;
+    }
+
+    if (tab.key === "apps") {
+      return `
+        <div class="row">
+          <div class="left">
+            <span class="rank">#${esc(it.rank)}</span>
+            <a class="title" href="${esc(it.url)}" target="_blank" rel="noreferrer">
+              ${it.artworkUrl100 ? `<img class="img" src="${esc(it.artworkUrl100)}" alt="">` : ""}
+              ${esc(it.name)}
             </a>
-            <div class="views">${item.views.toLocaleString()} views</div>
-          `;
-          list.appendChild(div);
-        });
-      })
-      .catch(() => {
-        document.getElementById("list").textContent = "error";
-      });
-  </script>
+            <div class="small">${esc(it.artistName || "")}</div>
+          </div>
+          <div class="right"></div>
+        </div>`;
+    }
+
+    return "";
+  }).join("");
+}
+
+function init(){
+  elTabs.innerHTML = TABS.map(t => `<div class="tab" data-key="${t.key}">${t.label}</div>`).join("");
+  [...elTabs.children].forEach(b => b.addEventListener("click", () => loadTab(b.dataset.key)));
+  loadTab(TABS[0].key);
+}
+init();
+</script>
 </body>
 </html>
-
