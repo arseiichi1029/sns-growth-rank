@@ -1,151 +1,140 @@
 ﻿<!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SNS Growth Rank</title>
-    <style>
-      :root {
-        --bg: #071225;
-        --panel: rgba(255,255,255,0.06);
-        --line: rgba(255,255,255,0.10);
-        --text: rgba(255,255,255,0.92);
-        --muted: rgba(255,255,255,0.65);
-        --accent: #42a5ff;
-      }
-      body {
-        margin: 0;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", sans-serif;
-        background: radial-gradient(1200px 700px at 15% 0%, rgba(66,165,255,0.18), transparent 55%),
-                    radial-gradient(1000px 700px at 85% 10%, rgba(255,255,255,0.08), transparent 60%),
-                    var(--bg);
-        color: var(--text);
-      }
-      .wrap { max-width: 980px; margin: 0 auto; padding: 32px 18px 60px; }
-      h1 { margin: 0 0 6px; font-size: 34px; letter-spacing: 0.3px; }
-      .sub { color: var(--muted); margin: 0 0 18px; }
-
-      .tabs { display: flex; gap: 10px; margin: 16px 0 14px; }
-      .tab {
-        border: 1px solid var(--line);
-        background: var(--panel);
-        color: var(--text);
-        padding: 10px 12px;
-        border-radius: 10px;
-        cursor: pointer;
-        user-select: none;
-        font-weight: 600;
-      }
-      .tab.active { outline: 2px solid rgba(66,165,255,0.35); }
-      .meta { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 13px; margin-bottom: 10px; }
-
-      .list { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: rgba(0,0,0,0.18); }
-      .row { display: flex; justify-content: space-between; gap: 12px; padding: 14px 14px; border-top: 1px solid var(--line); }
-      .row:first-child { border-top: none; }
-      .left { min-width: 0; }
-      .rank { color: var(--accent); font-weight: 800; margin-right: 10px; }
-      a.title { color: var(--text); text-decoration: none; font-weight: 700; }
-      a.title:hover { text-decoration: underline; }
-      .url { color: var(--muted); font-size: 12px; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 620px; }
-      .right { text-align: right; color: var(--muted); font-weight: 700; min-width: 140px; }
-      .small { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 600; }
-
-      .err { padding: 14px; color: #ffb6b6; border: 1px solid rgba(255,0,0,0.25); background: rgba(255,0,0,0.10); border-radius: 12px; }
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <h1>SNS Growth Rank</h1>
-      <p class="sub">請求ゼロ（GitHub Pages + GitHub Actions）</p>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SNS Growth Rank</title>
+  <link rel="stylesheet" href="./styles.css?v=2" />
+  <meta name="description" content="Wikipedia急上昇 / Google Trends を自動更新で並べる" />
+</head>
+<body data-theme="wiki">
+  <div class="wrap">
+    <div class="header">
+      <div class="logo">
+        <div class="logoMark" aria-hidden="true"></div>
+        <div>
+          <h1>SNS Growth Rank</h1>
+          <p class="subtitle">請求ゼロ（GitHub Pages + GitHub Actions）</p>
+        </div>
+      </div>
 
       <div class="tabs">
-        <div class="tab active" data-key="wiki">Wikipedia 急上昇</div>
-        <div class="tab" data-key="trends">Google Trends</div>
+        <button class="btn active" id="tabWiki" type="button">Wikipedia 急上昇</button>
+        <button class="btn" id="tabTrends" type="button">Google Trends</button>
       </div>
-
-      <div class="meta">
-        <div id="metaLeft">loading...</div>
-        <div id="metaRight"></div>
-      </div>
-
-      <div id="content"></div>
     </div>
 
-    <script>
-      const metaLeft = document.getElementById("metaLeft");
-      const metaRight = document.getElementById("metaRight");
-      const content = document.getElementById("content");
-      const tabs = Array.from(document.querySelectorAll(".tab"));
+    <!-- ad slot (top) -->
+    <div class="ad" id="ad-top">AD PLACEHOLDER (top)</div>
 
-      const FEEDS = {
-        wiki: { label: "Wikipedia 急上昇", url: "./data/wiki.json" },
-        trends: { label: "Google Trends", url: "./data/trends_google.json" },
-      };
+    <div class="metaRow">
+      <div><span class="badge" id="metaLeft">ja</span></div>
+      <div><span class="badge" id="metaRight">updated: -</span></div>
+    </div>
 
-      function fmtNum(n) {
-        if (!n) return "0";
-        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
+    <div class="panel">
+      <div class="notice" id="notice">loading...</div>
+      <div class="list" id="list"></div>
+    </div>
 
-      function renderList(data) {
-        if (!data || !data.ok) {
-          content.innerHTML = `<div class="err">error</div>`;
-          return;
-        }
+    <!-- ad slot (bottom) -->
+    <div class="ad" id="ad-bottom">AD PLACEHOLDER (bottom)</div>
 
-const locale = data.lang || data.geo || "JP";
-const date = data.date || "";
-const updated = data.updatedAt || data.updated_at || data.generatedAt || "";
+    <div class="footer">
+      <div>data: <span id="dataPath">-</span></div>
+    </div>
+  </div>
 
-metaLeft.textContent = `${locale} / ${date}`.trim();
-metaRight.textContent = updated ? `updated: ${updated}` : "";
+<script>
+const $ = (id) => document.getElementById(id);
 
+const PATHS = {
+  wiki: './data/wiki.json',
+  trends: './data/trends_google.json',
+};
 
-        const items = (data.items || []).slice(0, 50);
-        const rows = items.map((it) => {
-          const url = it.url || "";
-          const views = fmtNum(it.views || 0);
-          const traffic = it.traffic ? ` / ${it.traffic}` : "";
-          return `
-            <div class="row">
-              <div class="left">
-                <div>
-                  <span class="rank">#${it.rank}</span>
-                  ${url ? `<a class="title" href="${url}" target="_blank" rel="noopener noreferrer">${it.title}</a>`
-                        : `<span class="title">${it.title}</span>`}
-                </div>
-                ${url ? `<div class="url">${url}</div>` : ``}
-              </div>
-              <div class="right">
-                <div>${views} views</div>
-                <div class="small">${traffic}</div>
-              </div>
-            </div>
-          `;
-        }).join("");
+function setActive(mode){
+  document.body.setAttribute('data-theme', mode);
+  $('tabWiki').classList.toggle('active', mode === 'wiki');
+  $('tabTrends').classList.toggle('active', mode === 'trends');
+  $('metaLeft').textContent = mode === 'wiki' ? 'Wikipedia / ja' : 'Google Trends / ja';
+  $('dataPath').textContent = (mode === 'wiki') ? PATHS.wiki : PATHS.trends;
+}
 
-        content.innerHTML = `<div class="list">${rows}</div>`;
-      }
+function fmtViews(n){
+  if (n === 0) return '0 views';
+  if (!n) return '-';
+  return new Intl.NumberFormat('en-US').format(n) + ' views';
+}
 
-      async function load(key) {
-        const feed = FEEDS[key];
-        tabs.forEach(t => t.classList.toggle("active", t.dataset.key === key));
+function clearList(){
+  $('list').innerHTML = '';
+}
 
-        metaLeft.textContent = "loading...";
-        metaRight.textContent = "";
-        content.innerHTML = "";
+function renderItems(mode, items){
+  clearList();
+  const frag = document.createDocumentFragment();
+  items.slice(0, 50).forEach((it, i) => {
+    const rank = it.rank ?? (i+1);
+    const title = it.title ?? it.query ?? it.name ?? '(no title)';
+    const url = it.url ?? it.link ?? '';
+    const views = it.views ?? it.value ?? 0;
 
-        const bust = `?v=${Date.now()}`;
-        const res = await fetch(feed.url + bust, { cache: "no-store" });
-        const data = await res.json();
-        renderList(data);
-      }
+    const row = document.createElement('div');
+    row.className = 'item';
+    row.innerHTML = `
+      <div class="rank">#${rank}</div>
+      <div>
+        <div class="title">${escapeHtml(title)}</div>
+        <div class="url">${escapeHtml(url)}</div>
+      </div>
+      <div class="value">${mode === 'wiki' ? fmtViews(views) : '0 views'}</div>
+    `;
+    row.addEventListener('click', () => { if (url) window.open(url, '_blank', 'noopener'); });
+    frag.appendChild(row);
+  });
+  $('list').appendChild(frag);
+}
 
-      tabs.forEach(t => t.addEventListener("click", () => load(t.dataset.key)));
+function showNotice(kind, text){
+  const n = $('notice');
+  n.className = 'notice ' + (kind || '');
+  n.textContent = text;
+}
 
-      // 初期表示
-      load("wiki");
-    </script>
-  </body>
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, (c)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+async function load(mode){
+  setActive(mode);
+  showNotice('', 'loading...');
+  clearList();
+
+  const url = (mode === 'wiki' ? PATHS.wiki : PATHS.trends) + '?v=' + Date.now();
+  try{
+    const res = await fetch(url, { cache: 'no-store' });
+    const json = await res.json();
+
+    $('metaRight').textContent = 'updated: ' + (json.updatedAt || '-');
+
+    if (!json.ok){
+      showNotice('err', 'error: ' + (json.error || 'unknown'));
+      return;
+    }
+
+    const items = json.items || [];
+    showNotice('ok', 'loaded: ' + items.length);
+    renderItems(mode, items);
+  }catch(e){
+    showNotice('err', 'error: ' + (e && e.message ? e.message : String(e)));
+  }
+}
+
+$('tabWiki').addEventListener('click', ()=>load('wiki'));
+$('tabTrends').addEventListener('click', ()=>load('trends'));
+
+load('wiki');
+</script>
+</body>
 </html>
-
