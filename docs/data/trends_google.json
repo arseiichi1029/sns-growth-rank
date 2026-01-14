@@ -1,70 +1,9 @@
 {
-  "ok": true,
+  "ok": false,
   "source": "google_trends_rss",
   "geo": "JP",
   "lang": "ja",
-  "updatedAt": "2026-01-14T09:42:01.556Z",
-  "rss": "https://trends.google.co.jp/trending/rss?geo=JP",
-  "items": [
-    {
-      "rank": 1,
-      "title": "バーミヤン",
-      "traffic": "500+",
-      "link": "https://trends.google.com/trending/rss?geo=JP"
-    },
-    {
-      "rank": 2,
-      "title": "松崎優輝",
-      "traffic": "1000+",
-      "link": "https://trends.google.com/trending/rss?geo=JP"
-    },
-    {
-      "rank": 3,
-      "title": "安藤忠雄",
-      "traffic": "200+",
-      "link": "https://trends.google.com/trending/rss?geo=JP"
-    },
-    {
-      "rank": 4,
-      "title": "名古屋競馬",
-      "traffic": "100+",
-      "link": "https://trends.google.com/trending/rss?geo=JP"
-    },
-    {
-      "rank": 5,
-      "title": "精神障害者保健福祉手帳",
-      "traffic": "1000+",
-      "link": "https://trends.google.com/trending/rss?geo=JP"
-    },
-    {
-      "rank": 6,
-      "title": "本田真凜",
-      "traffic": "1000+",
-      "link": "https://trends.google.com/trending/rss?geo=JP"
-    },
-    {
-      "rank": 7,
-      "title": "アグリス九州",
-      "traffic": "200+",
-      "link": "https://trends.google.com/trending/rss?geo=JP"
-    },
-    {
-      "rank": 8,
-      "title": "神戸6歳児死亡事件",
-      "traffic": "200+",
-      "link": "https://trends.google.com/trending/rss?geo=JP"
-    },
-    {
-      "rank": 9,
-      "title": "大相撲 結果 速報 nhk",
-      "traffic": "2000+",
-      "link": "https://trends.google.com/trending/rss?geo=JP"
-    },
-    {
-      "rank": 10,
-      "title": "大相撲取組",
-      "traffic": "500+",
-      "link": "https://trends.google.com/trending/rss?geo=JP"
-    }
-  ]
+  "updatedAt": "2026-01-14T09:59:53.488Z",
+  "error": "xml not found",
+  "items": []
 }
