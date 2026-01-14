@@ -225,3 +225,39 @@ body[data-theme="wiki"] .btn.active{
   color: var(--muted);
   font-size: 12px;
 }
+
+
+/* ===== DESKTOP SIDE ADS (PC + keep TOP AD) ===== */
+
+/* デフォルト(スマホ含む): 左右広告は消す。トップ広告(タイトル下)は今あるまま表示 */
+.ad-side{ display:none; }
+
+/* PCだけ: 左右広告を表示。トップ広告はそのまま表示(触らない) */
+@media (min-width: 1100px){
+  .ad-side{
+    display:flex;
+    position:fixed;
+    top:120px;
+    width:160px;
+    height:600px;
+    border:1px dashed rgba(255,255,255,.35);
+    border-radius:12px;
+    background:rgba(0,0,0,.15);
+    color:rgba(255,255,255,.75);
+    font-weight:700;
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    backdrop-filter: blur(6px);
+  }
+  .ad-left{ left:16px; }
+  .ad-right{ right:16px; }
+
+  /* 左右広告のぶんだけ本文が隠れないよう余白 */
+  body{
+    padding-left:210px;
+    padding-right:210px;
+  }
+}
+/* ===== /DESKTOP SIDE ADS ===== */
+
