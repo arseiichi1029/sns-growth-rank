@@ -303,3 +303,31 @@ main, .container, .wrap, .content, #app, #root{
 
 
 
+/* ===== MOBILE: enable horizontal scroll INSIDE the result panel (not whole page) ===== */
+@media (max-width: 700px){
+
+  html, body{
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  .rank-card, .card, .panel, .results, .result, .table-wrap,
+  #rank, #results, #result, #list, #items{
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  .rank-card table, .card table, .panel table, .results table,
+  #rank table, #results table, #result table,
+  .rank-card .rows, .card .rows, .panel .rows, .results .rows,
+  #rank .rows, #results .rows, #result .rows{
+    width: max-content;
+    min-width: 100%;
+  }
+
+  a, .url, .link{
+    white-space: nowrap;
+  }
+}
+/* ===== /MOBILE horizontal scroll ===== */
