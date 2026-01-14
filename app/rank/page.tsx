@@ -8,12 +8,14 @@ type WikiItem = {
 };
 
 async function getTop(): Promise<WikiItem[]> {
-  // 同一デプロイ内のAPIを叩く（本番でもローカルでもOK）
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/wiki/top`, {
+  const res = await fetch("/api/wiki/top", {
     cache: "no-store",
   });
 
-  if (!res.ok) throw new Error("Failed to fetch /api/wiki/top");
+  if (!res.ok) {
+    throw new Error("Failed to fetch /api/wiki/top");
+  }
+
   const data = await res.json();
   return data.items ?? [];
 }
@@ -24,10 +26,10 @@ export default async function RankPage() {
   return (
     <main style={{ padding: 18 }}>
       <h1 style={{ fontSize: 20, fontWeight: 800, marginBottom: 12 }}>
-        Wikipedia 今日の急上昇（日本語）
+        Wikipedia 今日の急上昇（日本）
       </h1>
 
-      <div style={{ opacity: 0.75, marginBottom: 12 }}>
+      <div style={{ opacity: 0.7, marginBottom: 12 }}>
         取得元: /api/wiki/top
       </div>
 
@@ -40,19 +42,21 @@ export default async function RankPage() {
             rel="noreferrer"
             style={{
               display: "flex",
-              gap: 12,
-              alignItems: "baseline",
+              justifyContent: "space-between",
               padding: 12,
-              borderRadius: 12,
-              border: "1px solid rgba(255,255,255,0.12)",
+              borderRadius: 10,
+              border: "1px solid #e5e7eb",
               textDecoration: "none",
-              color: "inherit",
-              background: "rgba(0,0,0,0.12)",
+              color: "#111",
+              background: "#fff",
             }}
           >
-            <div style={{ width: 36, fontWeight: 900 }}>{it.rank}</div>
-            <div style={{ flex: 1, fontWeight: 700 }}>{it.title}</div>
-            <div style={{ opacity: 0.75 }}>{it.views.toLocaleString()} views</div>
+            <span>
+              {it.rank}. {it.title}
+            </span>
+            <span style={{ opacity: 0.6 }}>
+              {it.views.toLocaleString()}
+            </span>
           </a>
         ))}
       </div>
