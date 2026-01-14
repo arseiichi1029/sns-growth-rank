@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>SNS Growth Rank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <h1>SNS Growth Rank</h1>
+  <p>Wikipedia 急上昇（自動更新）</p>
+
+  <pre id="data">loading...</pre>
+
+  <script>
+    fetch("./data/wiki.json")
+      .then(r => r.json())
+      .then(d => {
+        document.getElementById("data").textContent =
+          JSON.stringify(d.items.slice(0,10), null, 2);
+      })
+      .catch(e => {
+        document.getElementById("data").textContent = "error";
+      });
+  </script>
+</body>
+</html>
+
