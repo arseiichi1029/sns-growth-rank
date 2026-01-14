@@ -8,12 +8,15 @@ type WikiItem = {
 };
 
 async function getTop(): Promise<WikiItem[]> {
-  // 本番でも確実に同一オリジンに投げる
-  const res = await fetch("https://sns-growth-rank.vercel.app/api/wiki/top", {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    "https://sns-growth-rank.vercel.app/api/wiki/top",
+    { cache: "no-store" }
+  );
 
-  if (!res.ok) throw new Error("Failed to fetch wiki top");
+  if (!res.ok) {
+    throw new Error("Failed to fetch wikipedia top");
+  }
+
   const data = await res.json();
   return data.items ?? [];
 }
@@ -61,4 +64,3 @@ export default async function RankPage() {
     </main>
   );
 }
-
