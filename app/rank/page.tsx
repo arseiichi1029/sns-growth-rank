@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+
 export const dynamic = "force-dynamic";
 
 type WikiItem = {
@@ -8,14 +10,16 @@ type WikiItem = {
 };
 
 async function getTop(): Promise<WikiItem[]> {
-  const res = await fetch(
-    "https://sns-growth-rank.vercel.app/api/wiki/top",
-    { cache: "no-store" }
-  );
+  const h = headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  const proto = h.get("x-forwarded-proto") ?? "https";
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch wikipedia top");
-  }
+  if (!host) throw new Error("Host header not found");
+
+  const base = `${proto}://${host}`;
+
+  const res = await fetch(`${base}/api/wiki/top`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to fetch wiki top: ${res.status}`);
 
   const data = await res.json();
   return data.items ?? [];
@@ -55,12 +59,11 @@ export default async function RankPage() {
             <span>
               {it.rank}. {it.title}
             </span>
-            <span style={{ opacity: 0.6 }}>
-              {it.views.toLocaleString()}
-            </span>
+            <span style={{ opacity: 0.6 }}>{it.views.toLocaleString()}</span>
           </a>
         ))}
       </div>
     </main>
   );
 }
+
