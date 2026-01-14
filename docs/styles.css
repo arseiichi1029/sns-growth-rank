@@ -431,3 +431,17 @@ html, body{
 }
 /* UNIFIED_CSS:END */
 
+
+
+/* === theme backgrounds (reddit / hn) === */
+:root[data-theme="reddit"] body{
+  background: radial-gradient(1200px 800px at 20% 10%, rgba(255,69,0,.35), transparent 60%),
+              radial-gradient(1200px 800px at 80% 30%, rgba(255,255,255,.18), transparent 60%),
+              linear-gradient(180deg, #111, #0b0f18);
+}
+:root[data-theme="hn"] body{
+  background: radial-gradient(1200px 800px at 20% 10%, rgba(255,102,0,.35), transparent 60%),
+              radial-gradient(1200px 800px at 80% 30%, rgba(255,204,0,.22), transparent 60%),
+              linear-gradient(180deg, #111, #0b0f18);
+}
+
